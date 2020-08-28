@@ -113,63 +113,79 @@ INSERT INTO Enrolment (StudentID, SubjCode, [Year], Semester, Grade, DateEnrolle
 
 --task 4
 
-/* query 1
-Select 
-stu.GivenName, stu.Surname, 
-sbj.SubjCode, sbj.Description, 
-enr.Year, enr.Semester, 
-sbjo.Fee, 
-tch.GivenName, tch.Surname
+/* query 1 */
 
+/*
+
+SELECT 
+    stu.GivenName, stu.Surname, 
+    sbj.SubjCode, sbj.Description, 
+    enr.Year, enr.Semester, 
+    sbjo.Fee, 
+    tch.GivenName, tch.Surname
 
 FROM ((((SubjectOffering sbjo
-INNER JOIN Subject sbj ON Sbj.SubjCode = sbjo.SubjCode)
+    INNER JOIN Subject sbj ON Sbj.SubjCode = sbjo.SubjCode)
+    INNER JOIN Teacher tch ON tch.StaffID = sbjo.StaffID)
+    INNER JOIN Enrolment enr ON enr.Year = sbjo.Year AND enr.Semester = sbjo.Semester)
+    INNER JOIN Student stu ON stu.StudentID = enr.StudentID)
 
-INNER JOIN Teacher tch ON tch.StaffID = sbjo.StaffID)
-
-INNER JOIN Enrolment enr ON enr.Year = sbjo.Year AND enr.Semester = sbjo.Semester)
-
-INNER JOIN Student stu ON stu.StudentID = enr.StudentID)
+ORDER BY year asc, semester asc; 
 */
 
 /* query 2
 
-select enr.Year, enr. Semester, COUNT(enr.studentID) as 'Num Enrolments'
-From enrolment enr
-Group by enr. year, enr. semester
-Order by year asc, semester asc; 
-
+SELECT enr.Year, enr. Semester, COUNT(enr.studentID) as 'Num Enrolments'
+FROM enrolment enr
+GROUP BY enr. year, enr. semester
+ORDER BY year asc, semester asc; 
 */
+
 
 /* query 3 
-
-select enr.studentID, sbjo.SubjCode, enr.year, enr.semester, sbjo.fee
-from enrolment enr
-
-INNER JOIN subjectoffering sbjo ON sbjo.SubjCode = enr.SubjCode AND sbjo.Year = enr.Year AND sbjo.semester = enr.semester
-where sbjo.fee = (select MAX(sbjo.fee) from subjectoffering sbjo);
-
 */
+SELECT enr.studentID, sbjo.SubjCode, enr.year, enr.semester, sbjo.fee
+FROM enrolment enr
+
+INNER JOIN 
+    subjectoffering sbjo ON sbjo.SubjCode = enr.SubjCode AND 
+    sbjo.Year = enr.Year AND 
+    sbjo.semester = enr.semester
+
+WHERE sbjo.fee = (select MAX(sbjo.fee) FROM subjectoffering sbjo);
+
+
 
 -- task 5
+
 /*
-go
 
-create view buildqueryview AS
+CREATE VIEW buildqueryview AS
 
-Select 
-stu.GivenName, stu.Surname, 
-sbj.SubjCode, sbj.Description, 
-enr.Year, enr.Semester, 
-sbjo.Fee, 
-tch.staffID
+SELECT 
+    stu.GivenName, stu.Surname, 
+    sbj.SubjCode, sbj.Description, 
+    enr.Year, enr.Semester, 
+    sbjo.Fee, 
+    tch.staffID
 
-FROM ((((SubjectOffering sbjo
-INNER JOIN Subject sbj ON Sbj.SubjCode = sbjo.SubjCode)
+FROM 
+    ((((SubjectOffering sbjo
+    INNER JOIN Subject sbj ON Sbj.SubjCode = sbjo.SubjCode)
+    INNER JOIN Teacher tch ON tch.StaffID = sbjo.StaffID)
+    INNER JOIN Enrolment enr ON enr.Year = sbjo.Year AND enr.Semester = sbjo.Semester)
+    INNER JOIN Student stu ON stu.StudentID = enr.StudentID)
 
-INNER JOIN Teacher tch ON tch.StaffID = sbjo.StaffID)
-
-INNER JOIN Enrolment enr ON enr.Year = sbjo.Year AND enr.Semester = sbjo.Semester)
-
-INNER JOIN Student stu ON stu.StudentID = enr.StudentID)
 */
+
+-- task 6
+
+-- SELECT COUNT(DateEnrolled) From Enrolment;
+
+/* 2019/1 had 2 enrolments, 2019/2 had 2 enrolments, 2020/1 had 4 enrolments and 2020/2 had 
+2 enrolments, totalling 10 enrolments in across the 2 years. This query returns a single column value of 10, the same number of rows of data in the 
+enrolment table excel sheet*/
+
+-- select count(sbjo.fee) from subjectoffering sbjo;
+
+/* this query returns a single row value of 5, the same numbers of rows returned in query 3 for high est fee paid */
