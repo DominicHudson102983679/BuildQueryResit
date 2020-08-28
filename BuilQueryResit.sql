@@ -182,10 +182,18 @@ FROM
 
 -- SELECT COUNT(DateEnrolled) From Enrolment;
 
-/* 2019/1 had 2 enrolments, 2019/2 had 2 enrolments, 2020/1 had 4 enrolments and 2020/2 had 
+/* 
+
+2019/1 had 2 enrolments, 2019/2 had 2 enrolments, 2020/1 had 4 enrolments and 2020/2 had 
 2 enrolments, totalling 10 enrolments in across the 2 years. This query returns a single column value of 10, the same number of rows of data in the 
-enrolment table excel sheet*/
+enrolment table excel sheet
+*/
 
--- select count(sbjo.fee) from subjectoffering sbjo;
 
-/* this query returns a single row value of 5, the same numbers of rows returned in query 3 for high est fee paid */
+select count(sbjo.fee) from subjectoffering sbjo;
+
+/*
+
+this query returns a single row value of 5, the same numbers of rows returned in query 3 for high est fee paid 
+
+*/
