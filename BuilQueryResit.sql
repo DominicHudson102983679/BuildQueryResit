@@ -27,6 +27,14 @@ Primary Key (StaffID)
 */
 
 /* Task 2
+/*
+DROP TABLE IF EXISTS enrolment;
+DROP TABLE IF EXISTS subjectoffering;
+DROP TABLE IF EXISTS student;
+DROP TABLE IF EXISTS teacher;
+DROP TABLE IF EXISTS subject;
+
+go
 
 CREATE TABLE Subject (
     SubjCode    NVARCHAR(100),
@@ -68,26 +76,75 @@ CREATE TABLE Enrolment (
     Grade       NVARCHAR(2) CHECK (Grade IN ('N', 'P', 'C', 'D', 'HD')) NULL,
     DateEnrolled    DATE,
     Primary Key (StudentID, SubjCode, Year, Semester),
-    Foreign Key (Semester, Year, SubjCode) references SubjectOffering,
+    Foreign Key (Year, Semester, SubjCode) references SubjectOffering,
     Foreign Key (StudentID) references Student
 );
 
-SELECT *
-from Subject
-
-Select * 
-from Teacher
-
-Select *
-from Student
-
-Select *
-From SubjectOffering
-
-Select *
-from Enrolment
+go
 
 */
-
 /* task 3 */
+/*
+INSERT INTO Student (StudentID, Surname, GivenName, Gender) VALUES
+('s12233445', 'Baird', 'Tim', 'M'),
+('s23344556', 'Nguyen', 'Anh', 'M'),
+('s34455667', 'Hallinan', 'James', 'M'),
+('102983679', 'Hudson', 'Dominic', 'M');
 
+
+
+INSERT INTO Subject (SubjCode, Description) VALUES
+('ICTPRG418', 'Apply SQL to extract & manipulate data'),
+('ICTBSB430', 'Create Basic Databases'),
+('ICTDBS205', 'Design a Database');
+
+INSERT INTO Teacher (StaffID, Surname, GivenName) VALUES
+(98776655 , 'Young', 'Angus'),
+(87665544 , 'Scott', 'Bon'),
+(76554433 , 'Slade', 'Chris');
+
+INSERT INTO SubjectOffering (SubjCode, Year, Semester, Fee, StaffID) VALUES
+('ICTPRG418', 2019, 1, 200, 98776655),
+('ICTPRG418', 2020, 1, 225, 98776655),
+('ICTBSB430', 2020, 1, 200, 87665544),
+('ICTBSB430', 2020, 2, 200, 76554433),
+('ICTDBS205', 2019, 2, 225, 87665544);
+
+INSERT INTO Enrolment (StudentID, SubjCode, [Year], Semester, Grade, DateEnrolled) VALUES
+('s12233445', 'ICTPRG418', 2019, 1, 'D', '02/25/2019'),
+('s23344556', 'ICTPRG418', 2019, 1, 'P', '02/15/2019'),
+('s12233445', 'ICTPRG418', 2020, 1, 'C', '01/30/2020'),
+('s23344556', 'ICTPRG418', 2020, 1, 'HD', '02/26/2020'),
+('s34455667', 'ICTPRG418', 2020, 1, 'P', '01/28/2020'),
+('s12233445', 'ICTBSB430', 2020, 1, 'C', '02/8/2020'),
+('s23344556', 'ICTBSB430', 2020, 2, null, '06/30/2020'),
+('s34455667', 'ICTBSB430', 2020, 2, null, '07/3/2020'),
+('s23344556', 'ICTDBS205', 2019, 2, 'P', '07/1/2019'),
+('s34455667', 'ICTDBS205', 2019, 2, 'N', '07/13/2019');
+
+
+
+select * 
+from subject
+select * 
+from teacher
+select * 
+from enrolment
+select * 
+from subjectoffering
+*/
+
+/* task 4 */
+
+Select 
+stu.GivenName, stu.Surname, 
+sbj.SubjCode, sbj.Description, 
+enr.Year, enr.Semester, 
+sbjo.Fee, 
+tch.GivenName, tch.Surname
+
+FROM ((((Student stu
+INNER JOIN Subject sbj ON sbj.SubjCode = sbjo.SubjCode)
+INNER JOIN Teacher tch ON tch.StaffID = sbjo.StaffID)
+INNER JOIN SubjectOffering sbjo ON sbjo.SubjCode = sbj.Subject)
+INNER JOIN Enrolment enr ON enr.Year = sbjo.Year AND enr.Semester = sbjo.Semester);
