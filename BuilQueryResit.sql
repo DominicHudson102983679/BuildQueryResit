@@ -26,16 +26,8 @@ Primary Key (StaffID)
 
 */
 
-/* Task 2
+-- Task 2
 /*
-DROP TABLE IF EXISTS enrolment;
-DROP TABLE IF EXISTS subjectoffering;
-DROP TABLE IF EXISTS student;
-DROP TABLE IF EXISTS teacher;
-DROP TABLE IF EXISTS subject;
-
-go
-
 CREATE TABLE Subject (
     SubjCode    NVARCHAR(100),
     Description NVARCHAR(500),
@@ -79,19 +71,15 @@ CREATE TABLE Enrolment (
     Foreign Key (Year, Semester, SubjCode) references SubjectOffering,
     Foreign Key (StudentID) references Student
 );
-
-go
-
 */
-/* task 3 */
+
+-- task 3
 /*
 INSERT INTO Student (StudentID, Surname, GivenName, Gender) VALUES
 ('s12233445', 'Baird', 'Tim', 'M'),
 ('s23344556', 'Nguyen', 'Anh', 'M'),
 ('s34455667', 'Hallinan', 'James', 'M'),
 ('102983679', 'Hudson', 'Dominic', 'M');
-
-
 
 INSERT INTO Subject (SubjCode, Description) VALUES
 ('ICTPRG418', 'Apply SQL to extract & manipulate data'),
@@ -121,21 +109,11 @@ INSERT INTO Enrolment (StudentID, SubjCode, [Year], Semester, Grade, DateEnrolle
 ('s34455667', 'ICTBSB430', 2020, 2, null, '07/3/2020'),
 ('s23344556', 'ICTDBS205', 2019, 2, 'P', '07/1/2019'),
 ('s34455667', 'ICTDBS205', 2019, 2, 'N', '07/13/2019');
-
-
-
-select * 
-from subject
-select * 
-from teacher
-select * 
-from enrolment
-select * 
-from subjectoffering
 */
 
-/* task 4 */
+--task 4
 
+/* query 1
 Select 
 stu.GivenName, stu.Surname, 
 sbj.SubjCode, sbj.Description, 
@@ -143,8 +121,55 @@ enr.Year, enr.Semester,
 sbjo.Fee, 
 tch.GivenName, tch.Surname
 
-FROM ((((Student stu
-INNER JOIN Subject sbj ON sbj.SubjCode = sbjo.SubjCode)
+
+FROM ((((SubjectOffering sbjo
+INNER JOIN Subject sbj ON Sbj.SubjCode = sbjo.SubjCode)
+
 INNER JOIN Teacher tch ON tch.StaffID = sbjo.StaffID)
-INNER JOIN SubjectOffering sbjo ON sbjo.SubjCode = sbj.Subject)
-INNER JOIN Enrolment enr ON enr.Year = sbjo.Year AND enr.Semester = sbjo.Semester);
+
+INNER JOIN Enrolment enr ON enr.Year = sbjo.Year AND enr.Semester = sbjo.Semester)
+
+INNER JOIN Student stu ON stu.StudentID = enr.StudentID)
+*/
+
+/* query 2
+
+select enr.Year, enr. Semester, COUNT(enr.studentID) as 'Num Enrolments'
+From enrolment enr
+Group by enr. year, enr. semester
+Order by year asc, semester asc; 
+
+*/
+
+/* query 3 
+
+select enr.studentID, sbjo.SubjCode, enr.year, enr.semester, sbjo.fee
+from enrolment enr
+
+INNER JOIN subjectoffering sbjo ON sbjo.SubjCode = enr.SubjCode AND sbjo.Year = enr.Year AND sbjo.semester = enr.semester
+where sbjo.fee = (select MAX(sbjo.fee) from subjectoffering sbjo);
+
+*/
+
+-- task 5
+/*
+go
+
+create view buildqueryview AS
+
+Select 
+stu.GivenName, stu.Surname, 
+sbj.SubjCode, sbj.Description, 
+enr.Year, enr.Semester, 
+sbjo.Fee, 
+tch.staffID
+
+FROM ((((SubjectOffering sbjo
+INNER JOIN Subject sbj ON Sbj.SubjCode = sbjo.SubjCode)
+
+INNER JOIN Teacher tch ON tch.StaffID = sbjo.StaffID)
+
+INNER JOIN Enrolment enr ON enr.Year = sbjo.Year AND enr.Semester = sbjo.Semester)
+
+INNER JOIN Student stu ON stu.StudentID = enr.StudentID)
+*/
